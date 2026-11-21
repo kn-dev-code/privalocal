@@ -1,0 +1,54 @@
+# Environment files (secrets)
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+!.env.example
+
+# Go build output
+bin/
+dist/
+/backend/src/server
+/backend/src/privalocal
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+coverage.html
+
+# Go workspace file (personal, not shared)
+go.work
+go.work.sum
+
+# Next.js / Node
+node_modules/
+.next/
+out/
+build/
+next-env.d.ts
+*.tsbuildinfo
+.vercel/
+.turbo/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local Postgres or other bind-mounted Docker data
+infra/data/
+infra/volumes/
+
+# Logs and test coverage
+*.log
+coverage/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp

@@ -1,0 +1,33 @@
+# Version control
+**/.git
+**/.gitignore
+
+# Secrets: pass them in at runtime with env_file or environment, never bake them into images
+**/.env
+**/.env.*
+!**/.env.example
+
+# Dependencies and build output (rebuilt inside the image)
+**/node_modules
+**/.next
+**/out
+**/bin
+**/dist
+**/coverage
+**/*.tsbuildinfo
+**/*.test
+**/*.out
+
+# Docker and infra files (not needed inside images)
+**/Dockerfile*
+**/docker-compose*.yml
+**/.dockerignore
+infra/data
+infra/volumes
+
+# Docs, logs, OS and editor files
+**/*.md
+**/*.log
+**/.DS_Store
+**/.idea
+**/.vscode
