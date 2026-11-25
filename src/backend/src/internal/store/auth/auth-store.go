@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"time"
-
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -54,6 +53,8 @@ func (s *Store) GetUserById(ctx context.Context, id int64) (User, error) {
 	}
 	return u, nil
 }
+
+
 
 
 
