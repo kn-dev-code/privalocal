@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"privalocal/internal/store/auth"
 	"strconv"
-	"github.com/jackc/pgx/v5/pgxpool"
+	"errors"
 )
 
 type UserGetter interface {
@@ -20,33 +20,25 @@ type Handler struct {
 
 
 // GET ME
-func (h *Handler) GetMe(res http.ResponseWriter, req http.Request) {
-	ctx := req.Context()
-	_ = ctx
+func (h *Handler) GetMe(res http.ResponseWriter, req *http.Request) {
 	userId, err := strconv.ParseInt(req.PathValue("id"), 10, 64)
 	if err != nil || userId <= 0 {
 		http.Error(res, "Invalid user id", http.StatusBadRequest)
 		return 
 	}
 
-	user, err := h.User.GetUserById(ctx, userId)
+	user, err := h.User.GetUserById(req.Context(), userId)
 	if err != nil {
-		if err.Is(err, pgx.ErrNoRows) {
+		if errors.Is(err, auth.ErrNotFound) {
 			http.Error(res, "User not found", http.StatusNotFound)
 			return
 		}
 		http.Error(res, "Failed to fetch user", http.StatusInternalServerError)
 		return
 
-		res.Header().Set("Content Type", "application/json")
-		if err := json.NewEncoder(res).Encode(user); err != nil {
-			http.Error(res, "Failed to encode application", http.StatusInternalServerError)
-			return
-		}
+		res.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(res).Encode(user)
 	}
-
-
-	return 
 }
 
 // POST ME

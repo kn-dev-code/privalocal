@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"time"
-	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5"
 )
 
 type Role string
@@ -15,6 +15,8 @@ const (
 	RoleUser  Role = "user"
 	RoleAdmin Role = "admin"
 )
+
+var ErrNotFound = errors.New("not found")
 
 type User struct {
 	ID        int64     `json:"id" db:"id"`
@@ -29,10 +31,15 @@ type Store struct {
 	pool *pgxpool.Pool
 }
 
+func NewStore(pool *pgxpool.Pool) *Store {
+	return &Store{pool: pool}
+}
 
+// User methods
 func (s *Store) GetUserById(ctx context.Context, id int64) (User, error) {
 	const query = `
 		SELECT ID, username, email, password_hash, role, created_at
+		FROM user_table
 		WHERE ID = $1
 	`
 
@@ -45,15 +52,17 @@ func (s *Store) GetUserById(ctx context.Context, id int64) (User, error) {
 		&u.Role,
 		&u.CreatedAt,
 	)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return User{}, fmt.Errorf("Get user %d: %w", id, pgx.ErrNoRows)
+	}
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return User{}, fmt.Errorf("Get user %d: %w", id, pgx.ErrNoRows)
-		}
 		return User{}, fmt.Errorf("query user %d: %w", id, err)
 	}
 	return u, nil
 }
 
+
+// Admin methods
 
 
 
