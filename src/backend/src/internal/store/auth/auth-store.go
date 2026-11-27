@@ -34,7 +34,7 @@ type Store struct {
 func NewStore(pool *pgxpool.Pool) *Store {
 	return &Store{pool: pool}
 }
-
+//
 // User methods
 func (s *Store) GetUserById(ctx context.Context, id int64) (User, error) {
 	const query = `
